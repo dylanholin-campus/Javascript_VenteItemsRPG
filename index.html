@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Boutique d'items RPG</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
   <header class="site-header">
     <div class="logo">RPG Shop</div>
     <nav class="main-nav" aria-label="Navigation principale">
-      <a href="#">Accueil</a>
-      <a href="#">Boutique</a>
+      <div class="dropdown">
+        <button class="dropbtn" type="button">Menu</button>
+        <div class="dropdown-content">
+          <a href="#">Accueil</a>
+          <a href="#">Boutique</a>
+        </div>
+      </div>
     </nav>
   </header>
 
@@ -38,6 +45,42 @@
       </div>
     </section>
 
+    <section class="add-item-section">
+      <h2>Ajouter un article</h2>
+      <form id="add-item-form" class="add-item-form">
+        <div class="form-row">
+          <label for="item-name">Nom</label>
+          <input id="item-name" name="name" type="text" required />
+        </div>
+        <div class="form-row">
+          <label for="item-price">Prix (Or)</label>
+          <input id="item-price" name="price" type="number" min="0" step="1" required />
+        </div>
+        <div class="form-row">
+          <label for="item-category">Catégorie</label>
+          <select id="item-category" name="category" required>
+            <option value="Arme">Armes</option>
+            <option value="Armure">Armures</option>
+            <option value="Potion">Potions</option>
+            <option value="Artefact">Artefacts</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="item-stock">Stock</label>
+          <input id="item-stock" name="stock" type="number" min="0" step="1" required />
+        </div>
+        <div class="form-row">
+          <label for="item-image">Image (URL)</label>
+          <input id="item-image" name="image" type="text" placeholder="assets/img/mon-image.jpeg" />
+        </div>
+        <div class="form-row">
+          <label for="item-description">Description</label>
+          <textarea id="item-description" name="description" rows="3"></textarea>
+        </div>
+        <button class="add-item-btn" type="submit">Ajouter</button>
+      </form>
+    </section>
+
     <!-- Petit bloc debug pour voir si l'API répond -->
     <section class="api-status">
       <p id="api-status-text">Vérification de l'API...</p>
@@ -54,4 +97,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

@@ -102,6 +102,13 @@ const feedContainer = document.getElementById("feed-container")
 const goldAmountSpan = document.getElementById("gold-amount")
 const categoryFilter = document.getElementById("category-filter")
 const apiStatusText = document.getElementById("api-status-text") // optionnel, si tu as ce <p> dans le HTML
+const addItemForm = document.getElementById("add-item-form")
+const itemNameInput = document.getElementById("item-name")
+const itemPriceInput = document.getElementById("item-price")
+const itemCategoryInput = document.getElementById("item-category")
+const itemStockInput = document.getElementById("item-stock")
+const itemImageInput = document.getElementById("item-image")
+const itemDescriptionInput = document.getElementById("item-description")
 
 // Mise à jour affichage de l'or
 function updateGoldDisplay() {
@@ -224,6 +231,38 @@ function renderItems(filterCategory = "all") {
 categoryFilter.addEventListener("change", (e) => {
   renderItems(e.target.value)
 })
+
+// Ajout d'un item via le formulaire
+if (addItemForm) {
+  addItemForm.addEventListener("submit", (event) => {
+    event.preventDefault()
+
+    const name = itemNameInput.value.trim()
+    const price = Number(itemPriceInput.value)
+    const category = itemCategoryInput.value
+    const stock = Number(itemStockInput.value)
+    const image = itemImageInput.value.trim()
+    const description = itemDescriptionInput.value.trim()
+
+    if (!name || Number.isNaN(price) || Number.isNaN(stock)) {
+      alert("Merci de remplir correctement le formulaire.")
+      return
+    }
+
+    addItem(
+      Date.now(),
+      name,
+      price,
+      description || "Nouvel article ajouté.",
+      image,
+      category,
+      stock
+    )
+
+    renderItems(categoryFilter.value || "all")
+    addItemForm.reset()
+  })
+}
 
 // ========= INTÉGRATION DE L'API ANIME (Jikan) =========
 // Jikan renvoie un objet { data: [ { title, synopsis, images: { jpg: { image_url } }, ... }, ... ] } sur /v4/anime. [web:25]
