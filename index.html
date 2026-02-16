@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boutique d'items RPG</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">RPG Shop</div>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a href="#">Accueil</a>
+      <a href="#">Boutique</a>
+    </nav>
+  </header>
+
+  <main class="site-main">
+    <section class="hero">
+      <h1>Trash Loot</h1>
+      <p>Le loot que personne ne veux</p>
+    </section>
+
+    <section class="toolbar">
+      <div class="gold-display">
+        Or : <span id="gold-amount">0</span>
+      </div>
+
+      <div class="filters">
+        <label for="category-filter">Filtrer par catégorie</label>
+        <select id="category-filter">
+          <option value="all">Toutes</option>
+          <option value="Arme">Armes</option>
+          <option value="Armure">Armures</option>
+          <option value="Potion">Potions</option>
+          <option value="Artefact">Artefacts</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Petit bloc debug pour voir si l'API répond -->
+    <section class="api-status">
+      <p id="api-status-text">Vérification de l'API...</p>
+    </section>
+
+    <section id="feed-container" class="cards-grid">
+      <!-- Cartes produits générées par app.js -->
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Boutique d'items RPG - projet JS</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
