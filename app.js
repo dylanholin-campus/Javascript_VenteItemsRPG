@@ -1,7 +1,6 @@
 // URL de base de l'API Jikan (MyAnimeList non officiel)
 const ANIME_API_BASE = "https://api.jikan.moe/v4/anime?limit=12"  // renvoie data = [ { title, images, synopsis, ... } ]
 
-// Données mock d'items RPG
 const itemsRPG = [
   {
     id: 1,
@@ -50,7 +49,6 @@ const itemsRPG = [
   }
 ]
 
-// Fonction pour ajouter un nouvel item
 function addItem(id, name, price, description, image, category, stock) {
   itemsRPG.push({
     id,
@@ -63,7 +61,6 @@ function addItem(id, name, price, description, image, category, stock) {
   })
 }
 
-// Items supplémentaires mock
 addItem(
   6,
   "Potion mystère",
@@ -94,14 +91,12 @@ addItem(
   12940
 )
 
-// Or du joueur (mock)
 let playerGold = 800
 
-// Sélecteurs de base
 const feedContainer = document.getElementById("feed-container")
 const goldAmountSpan = document.getElementById("gold-amount")
 const categoryFilter = document.getElementById("category-filter")
-const apiStatusText = document.getElementById("api-status-text") // optionnel, si tu as ce <p> dans le HTML
+const apiStatusText = document.getElementById("api-status-text") 
 const addItemForm = document.getElementById("add-item-form")
 const itemNameInput = document.getElementById("item-name")
 const itemPriceInput = document.getElementById("item-price")
@@ -110,7 +105,6 @@ const itemStockInput = document.getElementById("item-stock")
 const itemImageInput = document.getElementById("item-image")
 const itemDescriptionInput = document.getElementById("item-description")
 
-// Mise à jour affichage de l'or
 function updateGoldDisplay() {
   goldAmountSpan.textContent = playerGold
 }

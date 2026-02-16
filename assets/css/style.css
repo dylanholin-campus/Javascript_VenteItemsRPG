@@ -59,6 +59,18 @@ body {
   display: block;
 }
 
+.dropdown:focus-within .dropdown-content {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .dropdown-content {
+    right: 0;
+    left: auto;
+    min-width: 180px;
+  }
+}
+
 /* LAYOUT GLOBAL */
 
 .site-header {
