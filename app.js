@@ -1,5 +1,4 @@
-// URL de base de l'API Jikan (MyAnimeList non officiel)
-const ANIME_API_BASE = "https://api.jikan.moe/v4/anime?limit=12"  // renvoie data = [ { title, images, synopsis, ... } ]
+const ANIME_API_BASE = "https://api.jikan.moe/v4/anime?limit=12"
 
 const itemsRPG = [
   {
@@ -9,7 +8,7 @@ const itemsRPG = [
     description: "Lame légendaire forgée dans le feu d'un dragon ancien.",
     image: "assets/img/epeedragon.jpeg",
     category: "Arme",
-    stock: 3
+    stock: 1
   },
   {
     id: 2,
@@ -96,7 +95,7 @@ let playerGold = 800
 const feedContainer = document.getElementById("feed-container")
 const goldAmountSpan = document.getElementById("gold-amount")
 const categoryFilter = document.getElementById("category-filter")
-const apiStatusText = document.getElementById("api-status-text") 
+const apiStatusText = document.getElementById("api-status-text")
 const addItemForm = document.getElementById("add-item-form")
 const itemNameInput = document.getElementById("item-name")
 const itemPriceInput = document.getElementById("item-price")
@@ -109,7 +108,6 @@ function updateGoldDisplay() {
   goldAmountSpan.textContent = playerGold
 }
 
-// Création d'une carte produit
 function createItemCard(item) {
   const card = document.createElement("article")
   card.className = "item-card"
@@ -180,7 +178,6 @@ function createItemCard(item) {
   return card
 }
 
-// Gestion de l'achat
 function handleBuy(item, stockElement, buttonElement) {
   if (item.stock <= 0) return
   if (playerGold < item.price) {
@@ -193,40 +190,36 @@ function handleBuy(item, stockElement, buttonElement) {
 
   updateGoldDisplay()
   stockElement.textContent = `Stock : ${item.stock}`
-
   if (item.stock <= 0) {
     buttonElement.disabled = true
     buttonElement.textContent = "Rupture"
   }
 }
 
-// Rendu des items
-function renderItems(filterCategory = "all") {
-  feedContainer.innerHTML = ""
+function renderItems(filterCategory = "all") { // UTILISATION D'OBJETS : fonction qui traite tous les objets du tableau itemsRPG
+  feedContainer.innerHTML = "" // MODIFICATION DU DOM : vider le conteneur avec innerHTML pour réafficher les items filtrés
 
   const filtered = itemsRPG.filter((item) => {
     return filterCategory === "all" || item.category === filterCategory
   })
 
-  filtered.forEach((item) => {
-    const card = createItemCard(item)
-    feedContainer.appendChild(card)
+  filtered.forEach((item) => { // ITÉRATION SUR LES OBJETS : parcours de chaque objet du tableau filtré pour créer une carte d'item
+    const card = createItemCard(item) // UTILISATION D'OBJETS : création d'une carte pour chaque objet item
+    feedContainer.appendChild(card) // MODIFICATION DU DOM : ajout de la carte d'item au conteneur feedContainer
   })
 
-  if (filtered.length === 0) {
-    const emptyMsg = document.createElement("p")
-    emptyMsg.className = "empty-message"
-    emptyMsg.textContent = "Aucun item trouvé pour cette catégorie."
-    feedContainer.appendChild(emptyMsg)
+  if (filtered.length === 0) { // GESTION DES CAS PARTICULIERS : affichage d'un message si aucun item ne correspond au filtre
+    const emptyMsg = document.createElement("p") // MODIFICATION DU DOM : création d'un élément html pour afficher le message d'absence d'items
+    emptyMsg.className = "empty-message" // CLASSE CSS : ajout d'une classe pour styliser le message d'absence d'items
+    emptyMsg.textContent = "Aucun item trouvé pour cette catégorie." // s'affiche seulement si le tableau filtré est vide
+    feedContainer.appendChild(emptyMsg) // modifie le DOM pour ajouter le message d'absence d'items au conteneur feedContainer
   }
 }
 
-// Écouteur sur le select de catégorie
 categoryFilter.addEventListener("change", (e) => {
   renderItems(e.target.value)
 })
 
-// Ajout d'un item via le formulaire
 if (addItemForm) {
   addItemForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -243,7 +236,7 @@ if (addItemForm) {
       return
     }
 
-    addItem(
+    addItem( // UTILISATION D'OBJETS : création d'un nouvel objet via le formulaire
       Date.now(),
       name,
       price,
@@ -257,9 +250,6 @@ if (addItemForm) {
     addItemForm.reset()
   })
 }
-
-// ========= INTÉGRATION DE L'API ANIME (Jikan) =========
-// Jikan renvoie un objet { data: [ { title, synopsis, images: { jpg: { image_url } }, ... }, ... ] } sur /v4/anime. [web:25]
 
 async function loadAnimeItems() {
   try {
@@ -278,7 +268,7 @@ async function loadAnimeItems() {
     }
 
     const json = await response.json()
-    const animes = json.data || []  // tableau d'animes Jikan
+    const animes = json.data || [] // UTILISATION D'OBJETS : accès à la propriété data de l'objet réponse API  // tableau d'animes Jikan
 
     if (!Array.isArray(animes) || animes.length === 0) {
       if (apiStatusText) {
@@ -288,19 +278,19 @@ async function loadAnimeItems() {
       return
     }
 
-    animes.forEach((anime, index) => {
-      const title = anime.title || "Anime inconnu"
-      const img = anime.images?.jpg?.image_url || ""
-      const synopsis = anime.synopsis || "Grimoire mystérieux inspiré d'un anime."
+    animes.forEach((anime, index) => { // ITÉRATION SUR LES OBJETS : parcours des objets anime retournés par l'API
+      const title = anime.title || "Anime inconnu" // ACCÈS AUX PROPRIÉTÉS : utilisation de anime.title
+      const img = anime.images?.jpg?.image_url || "" // ACCÈS AUX PROPRIÉTÉS : utilisation de anime.images?.jpg?.image_url
+      const synopsis = "Grimoire mystérieux inspiré d'un anime." // ACCÈS AUX PROPRIÉTÉS : utilisation de anime.synopsis
 
-      addItem(
+      addItem( // CRÉATION D'OBJETS : création d'objets à partir des données API
         itemsRPG.length + 1,
         `${title}`,
-        50 + (index * 20),            // prix simple, croissant
+        50 + (index * 20),
         "Grimoire contenant des secrets de la magie jap anime",
-        img,                         // jaquette MAL
+        img,
         "Artefact",
-        1                            // stock arbitraire
+        1
       )
     })
 
@@ -308,7 +298,6 @@ async function loadAnimeItems() {
       apiStatusText.textContent = "API Jikan OK, items chargés"
     }
 
-    // Re-render après ajout des items issus de l'API
     renderItems(categoryFilter.value || "all")
   } catch (err) {
     if (apiStatusText) {
@@ -318,7 +307,6 @@ async function loadAnimeItems() {
   }
 }
 
-// Initialisation
 updateGoldDisplay()
 renderItems()
 loadAnimeItems()
