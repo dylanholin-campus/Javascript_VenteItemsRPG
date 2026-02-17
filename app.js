@@ -105,7 +105,7 @@ const itemImageInput = document.getElementById("item-image")
 const itemDescriptionInput = document.getElementById("item-description")
 
 function updateGoldDisplay() {
-  goldAmountSpan.textContent = playerGold
+  goldAmountSpan.textContent = playerGold // MODIFIER LE DOM : modification du texte d'un élément avec textContent
 }
 
 function createItemCard(item) {
@@ -119,7 +119,7 @@ function createItemCard(item) {
 
   const title = document.createElement("h2")
   title.className = "item-title"
-  title.textContent = item.name
+  title.textContent = item.name // MODIFIER LE DOM : modification du texte d'un élément avec textContent
 
   const category = document.createElement("p")
   category.className = "item-category"
@@ -132,13 +132,13 @@ function createItemCard(item) {
   const price = document.createElement("p")
   price.className = "item-price"
   if (typeof item.price === "number" && item.price === -1) {
-    price.textContent = "Indisponible"
+    price.textContent = "Indisponible" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   } else if (typeof item.price === "number" && item.price === 0) {
-    price.textContent = "Gratuit"
+    price.textContent = "Gratuit" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   } else if (typeof item.price === "number") {
-    price.textContent = item.price + " Or"
+    price.textContent = item.price + " Or" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   } else {
-    price.textContent = "erreur"
+    price.textContent = "erreur" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   }
 
   const stock = document.createElement("p")
@@ -146,7 +146,7 @@ function createItemCard(item) {
   if (typeof item.stock === "number" && item.stock <= 0) {
     stock.textContent = ""
   } else if (typeof item.stock === "number") {
-    stock.textContent = `Stock : ${item.stock}`
+    stock.textContent = `Stock : ${item.stock}` // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   } else {
     stock.textContent = "erreur"
   }
@@ -160,10 +160,12 @@ function createItemCard(item) {
   } else if (typeof item.stock === "number") {
     button.textContent = "Acheter"
   } else {
-    button.textContent = "- erreur -"
+    button.textContent = "- erreur -" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   }
 
-  button.addEventListener("click", () =>
+  button.addEventListener("click", () => 
+    // event SOURIS : permet de déclencher une action lors d'un clic sur le bouton "Acheter" d'un item,
+    // ce qui permet de gérer l'achat de l'item en vérifiant le stock et l'or du joueur, puis en mettant à jour l'affichage en conséquence
     handleBuy(item, stock, button)
   )
 
@@ -189,39 +191,44 @@ function handleBuy(item, stockElement, buttonElement) {
   item.stock -= 1
 
   updateGoldDisplay()
-  stockElement.textContent = `Stock : ${item.stock}`
+  stockElement.textContent = `Stock : ${item.stock}` // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   if (item.stock <= 0) {
     buttonElement.disabled = true
-    buttonElement.textContent = "Rupture"
+    buttonElement.textContent = "Rupture" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   }
 }
 
-function renderItems(filterCategory = "all") { // UTILISATION D'OBJETS : fonction qui traite tous les objets du tableau itemsRPG
-  feedContainer.innerHTML = "" // MODIFICATION DU DOM : vider le conteneur avec innerHTML pour réafficher les items filtrés
+function renderItems(filterCategory = "all") {
+  feedContainer.innerHTML = "" // MODIFIER LE DOM : modification du contenu HTML d'un élément avec innerHTML
 
   const filtered = itemsRPG.filter((item) => {
     return filterCategory === "all" || item.category === filterCategory
   })
 
-  filtered.forEach((item) => { // ITÉRATION SUR LES OBJETS : parcours de chaque objet du tableau filtré pour créer une carte d'item
-    const card = createItemCard(item) // UTILISATION D'OBJETS : création d'une carte pour chaque objet item
-    feedContainer.appendChild(card) // MODIFICATION DU DOM : ajout de la carte d'item au conteneur feedContainer
+  filtered.forEach((item) => {
+    const card = createItemCard(item)
+    feedContainer.appendChild(card)
   })
 
-  if (filtered.length === 0) { // GESTION DES CAS PARTICULIERS : affichage d'un message si aucun item ne correspond au filtre
-    const emptyMsg = document.createElement("p") // MODIFICATION DU DOM : création d'un élément html pour afficher le message d'absence d'items
-    emptyMsg.className = "empty-message" // CLASSE CSS : ajout d'une classe pour styliser le message d'absence d'items
-    emptyMsg.textContent = "Aucun item trouvé pour cette catégorie." // s'affiche seulement si le tableau filtré est vide
-    feedContainer.appendChild(emptyMsg) // modifie le DOM pour ajouter le message d'absence d'items au conteneur feedContainer
+  if (filtered.length === 0) {
+    const emptyMsg = document.createElement("p")
+    emptyMsg.className = "empty-message"
+    emptyMsg.textContent = "Aucun item trouvé pour cette catégorie." // MODIFIER LE DOM : modification du texte d'un élément avec textContent
+    feedContainer.appendChild(emptyMsg)
   }
 }
 
-categoryFilter.addEventListener("change", (e) => {
+categoryFilter.addEventListener("change", (e) => { 
+  // EVENT CLAVIER : permet de déclencher une action lors du changement de sélection dans un élément <select>
+  // ce qui permet de filtrer les items affichés en fonction de la catégorie choisie par l'utilisateur
   renderItems(e.target.value)
 })
 
 if (addItemForm) {
-  addItemForm.addEventListener("submit", (event) => {
+  addItemForm.addEventListener("submit", (event) => { 
+    // EVENT CLAVIER: permet de déclencher une action lors de la soumission
+  //  d'un formulaire par un appui sur la touche "Entrée" ou un clic sur le bouton de soumission
+  // ce qui permet d'ajouter un nouvel item à la boutique en utilisant les données saisies par l'utilisateur dans le formulaire
     event.preventDefault()
 
     const name = itemNameInput.value.trim()
@@ -236,7 +243,7 @@ if (addItemForm) {
       return
     }
 
-    addItem( // UTILISATION D'OBJETS : création d'un nouvel objet via le formulaire
+    addItem(
       Date.now(),
       name,
       price,
@@ -254,36 +261,36 @@ if (addItemForm) {
 async function loadAnimeItems() {
   try {
     if (apiStatusText) {
-      apiStatusText.textContent = "Appel de l'API Jikan..."
+      apiStatusText.textContent = "Appel de l'API Jikan..." // MODIFIER LE DOM : modification du texte d'un élément avec textContent
     }
 
     const response = await fetch(ANIME_API_BASE)
 
     if (!response.ok) {
       if (apiStatusText) {
-        apiStatusText.textContent = "Erreur API : " + response.status
+        apiStatusText.textContent = "Erreur API : " + response.status // MODIFIER LE DOM : modification du texte d'un élément avec textContent
       }
       console.error("Erreur API Jikan:", response.status, response.statusText)
       return
     }
 
     const json = await response.json()
-    const animes = json.data || [] // UTILISATION D'OBJETS : accès à la propriété data de l'objet réponse API  // tableau d'animes Jikan
+    const animes = json.data || []
 
     if (!Array.isArray(animes) || animes.length === 0) {
       if (apiStatusText) {
-        apiStatusText.textContent = "API OK mais aucune donnée reçue"
+        apiStatusText.textContent = "API OK mais aucune donnée reçue" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
       }
       console.warn("Réponse Jikan inattendue:", json)
       return
     }
 
-    animes.forEach((anime, index) => { // ITÉRATION SUR LES OBJETS : parcours des objets anime retournés par l'API
-      const title = anime.title || "Anime inconnu" // ACCÈS AUX PROPRIÉTÉS : utilisation de anime.title
-      const img = anime.images?.jpg?.image_url || "" // ACCÈS AUX PROPRIÉTÉS : utilisation de anime.images?.jpg?.image_url
-      const synopsis = "Grimoire mystérieux inspiré d'un anime." // ACCÈS AUX PROPRIÉTÉS : utilisation de anime.synopsis
+    animes.forEach((anime, index) => {
+      const title = anime.title || "Anime inconnu"
+      const img = anime.images?.jpg?.image_url || ""
+      const synopsis = "Grimoire mystérieux inspiré d'un anime."
 
-      addItem( // CRÉATION D'OBJETS : création d'objets à partir des données API
+      addItem(
         itemsRPG.length + 1,
         `${title}`,
         50 + (index * 20),
@@ -295,13 +302,13 @@ async function loadAnimeItems() {
     })
 
     if (apiStatusText) {
-      apiStatusText.textContent = "API Jikan OK, items chargés"
+      apiStatusText.textContent = "API Jikan OK, items chargés" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
     }
 
     renderItems(categoryFilter.value || "all")
   } catch (err) {
     if (apiStatusText) {
-      apiStatusText.textContent = "Erreur lors de l'appel API (voir console)"
+      apiStatusText.textContent = "Erreur lors de l'appel API (voir console)" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
     }
     console.error("Erreur lors du chargement des animes Jikan:", err)
   }
