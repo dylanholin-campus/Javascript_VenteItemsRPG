@@ -102,7 +102,30 @@ const itemPriceInput = document.getElementById("item-price")
 const itemCategoryInput = document.getElementById("item-category")
 const itemStockInput = document.getElementById("item-stock")
 const itemImageInput = document.getElementById("item-image")
+const itemImageFileInput = document.getElementById("item-image-file")
+const itemImageFileFeedback = document.getElementById("item-image-file-feedback")
+const itemImagePreview = document.getElementById("item-image-preview")
 const itemDescriptionInput = document.getElementById("item-description")
+const viewMosaicBtn = document.getElementById("view-mosaic-btn")
+const viewColumnBtn = document.getElementById("view-column-btn")
+
+let selectedImageDataUrl = ""
+
+function setGalleryView(mode = "mosaic") {
+  if (!feedContainer) return
+
+  const isColumn = mode === "column"
+
+  feedContainer.classList.toggle("view-column", isColumn)
+  feedContainer.classList.toggle("view-mosaic", !isColumn)
+
+  if (viewMosaicBtn) {
+    viewMosaicBtn.setAttribute("aria-pressed", String(!isColumn))
+  }
+  if (viewColumnBtn) {
+    viewColumnBtn.setAttribute("aria-pressed", String(isColumn))
+  }
+}
 
 function updateGoldDisplay() {
   goldAmountSpan.textContent = playerGold // MODIFIER LE DOM : modification du texte d'un élément avec textContent
@@ -163,7 +186,7 @@ function createItemCard(item) {
     button.textContent = "- erreur -" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
   }
 
-  button.addEventListener("click", () => 
+  button.addEventListener("click", () =>
     // event SOURIS : permet de déclencher une action lors d'un clic sur le bouton "Acheter" d'un item,
     // ce qui permet de gérer l'achat de l'item en vérifiant le stock et l'or du joueur, puis en mettant à jour l'affichage en conséquence
     handleBuy(item, stock, button)
@@ -191,10 +214,10 @@ function handleBuy(item, stockElement, buttonElement) {
   item.stock -= 1
 
   updateGoldDisplay()
-  stockElement.textContent = `Stock : ${item.stock}` // MODIFIER LE DOM : modification du texte d'un élément avec textContent
+  stockElement.textContent = `Stock : ${item.stock}`
   if (item.stock <= 0) {
     buttonElement.disabled = true
-    buttonElement.textContent = "Rupture" // MODIFIER LE DOM : modification du texte d'un élément avec textContent
+    buttonElement.textContent = "Rupture"
   }
 }
 
@@ -218,24 +241,70 @@ function renderItems(filterCategory = "all") {
   }
 }
 
-categoryFilter.addEventListener("change", (e) => { 
+categoryFilter.addEventListener("change", (e) => {
   // EVENT CLAVIER : permet de déclencher une action lors du changement de sélection dans un élément <select>
   // ce qui permet de filtrer les items affichés en fonction de la catégorie choisie par l'utilisateur
   renderItems(e.target.value)
 })
 
 if (addItemForm) {
-  addItemForm.addEventListener("submit", (event) => { 
+  if (itemImageFileInput) {
+    itemImageFileInput.addEventListener("change", () => {
+      const selectedFile = itemImageFileInput.files?.[0]
+
+      if (!selectedFile) {
+        selectedImageDataUrl = ""
+        if (itemImageFileFeedback) {
+          itemImageFileFeedback.textContent = "Aucune image sélectionnée."
+        }
+        if (itemImagePreview) {
+          itemImagePreview.hidden = true
+          itemImagePreview.removeAttribute("src")
+        }
+        return
+      }
+
+      if (!selectedFile.type.startsWith("image/")) {
+        alert("Merci de sélectionner un fichier image valide.")
+        itemImageFileInput.value = ""
+        selectedImageDataUrl = ""
+        if (itemImageFileFeedback) {
+          itemImageFileFeedback.textContent = "Aucune image sélectionnée."
+        }
+        if (itemImagePreview) {
+          itemImagePreview.hidden = true
+          itemImagePreview.removeAttribute("src")
+        }
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        selectedImageDataUrl = String(reader.result || "")
+        if (itemImageFileFeedback) {
+          itemImageFileFeedback.textContent = `Image sélectionnée : ${selectedFile.name}`
+        }
+        if (itemImagePreview && selectedImageDataUrl) {
+          itemImagePreview.src = selectedImageDataUrl
+          itemImagePreview.hidden = false
+        }
+      }
+      reader.readAsDataURL(selectedFile)
+    })
+  }
+
+  addItemForm.addEventListener("submit", (event) => {
     // EVENT CLAVIER: permet de déclencher une action lors de la soumission
-  //  d'un formulaire par un appui sur la touche "Entrée" ou un clic sur le bouton de soumission
-  // ce qui permet d'ajouter un nouvel item à la boutique en utilisant les données saisies par l'utilisateur dans le formulaire
+    //  d'un formulaire par un appui sur la touche "Entrée" ou un clic sur le bouton de soumission
+    // ce qui permet d'ajouter un nouvel item à la boutique en utilisant les données saisies par l'utilisateur dans le formulaire
     event.preventDefault()
 
     const name = itemNameInput.value.trim()
     const price = Number(itemPriceInput.value)
     const category = itemCategoryInput.value
     const stock = Number(itemStockInput.value)
-    const image = itemImageInput.value.trim()
+    const imageUrl = itemImageInput.value.trim()
+    const image = selectedImageDataUrl || imageUrl
     const description = itemDescriptionInput.value.trim()
 
     if (!name || Number.isNaN(price) || Number.isNaN(stock)) {
@@ -255,6 +324,26 @@ if (addItemForm) {
 
     renderItems(categoryFilter.value || "all")
     addItemForm.reset()
+    selectedImageDataUrl = ""
+    if (itemImageFileFeedback) {
+      itemImageFileFeedback.textContent = "Aucune image sélectionnée."
+    }
+    if (itemImagePreview) {
+      itemImagePreview.hidden = true
+      itemImagePreview.removeAttribute("src")
+    }
+  })
+}
+
+if (viewMosaicBtn) {
+  viewMosaicBtn.addEventListener("click", () => {
+    setGalleryView("mosaic")
+  })
+}
+
+if (viewColumnBtn) {
+  viewColumnBtn.addEventListener("click", () => {
+    setGalleryView("column")
   })
 }
 
@@ -315,5 +404,6 @@ async function loadAnimeItems() {
 }
 
 updateGoldDisplay()
+setGalleryView("mosaic")
 renderItems()
 loadAnimeItems()

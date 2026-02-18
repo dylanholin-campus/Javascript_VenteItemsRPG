@@ -43,6 +43,12 @@
           <option value="Artefact">Artefacts</option>
         </select>
       </div>
+
+      <div class="view-switch" role="group" aria-label="Mode d'affichage de la galerie">
+        <span class="view-switch-label">Affichage</span>
+        <button id="view-mosaic-btn" class="view-btn" type="button" aria-pressed="true">Mosaïque</button>
+        <button id="view-column-btn" class="view-btn" type="button" aria-pressed="false">Colonne</button>
+      </div>
     </section>
 
     <section class="add-item-section">
@@ -74,6 +80,12 @@
           <input id="item-image" name="image" type="text" placeholder="assets/img/mon-image.jpeg" />
         </div>
         <div class="form-row">
+          <label for="item-image-file">Ou importer une image</label>
+          <input id="item-image-file" name="image-file" type="file" accept="image/*" />
+          <p id="item-image-file-feedback" class="file-feedback">Aucune image sélectionnée.</p>
+          <img id="item-image-preview" class="item-image-preview" alt="Aperçu de l'image importée" hidden />
+        </div>
+        <div class="form-row">
           <label for="item-description">Description</label>
           <textarea id="item-description" name="description" rows="3"></textarea>
         </div>
@@ -86,7 +98,7 @@
       <p id="api-status-text">Vérification de l'API...</p>
     </section>
 
-    <section id="feed-container" class="cards-grid">
+    <section id="feed-container" class="cards-grid view-mosaic">
     </section>
   </main>
 

@@ -154,6 +154,39 @@ body {
   padding: 0.25rem 0.5rem;
 }
 
+.view-switch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.view-switch-label {
+  font-size: 0.9rem;
+  color: #d0d0d0;
+}
+
+.view-btn {
+  border: 1px solid #2f374f;
+  background: #151823;
+  color: #f5f5f5;
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.view-btn:hover {
+  border-color: #ffd56b;
+}
+
+.view-btn[aria-pressed="true"] {
+  background: #ffd56b;
+  color: #0b0c10;
+  border-color: #ffd56b;
+  font-weight: 700;
+}
+
 /* FORMULAIRE AJOUT ITEM */
 
 .add-item-section {
@@ -196,6 +229,20 @@ body {
   resize: vertical;
 }
 
+.file-feedback {
+  font-size: 0.8rem;
+  color: #a5b1c2;
+}
+
+.item-image-preview {
+  width: 100%;
+  max-width: 220px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid #2f374f;
+  border-radius: 8px;
+}
+
 .add-item-btn {
   align-self: flex-start;
   background: #ffd56b;
@@ -216,6 +263,11 @@ body {
   margin-top: 1rem;
 }
 
+.cards-grid.view-column {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
 /* CARTE PRODUIT */
 
 .item-card {
@@ -228,6 +280,14 @@ body {
   flex-direction: column;
   justify-content: space-between;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.cards-grid.view-mosaic .item-card {
+  width: calc(50% - 0.5rem);
+}
+
+.cards-grid.view-column .item-card {
+  width: 100%;
 }
 
 .item-image {
@@ -329,14 +389,27 @@ body {
 /* RESPONSIVE DESKTOP */
 
 @media (min-width: 640px) {
-  .item-card {
+  .cards-grid.view-mosaic .item-card {
     width: calc(50% - 0.5rem);
+  }
+
+  .cards-grid.view-column .item-card {
+    width: 100%;
   }
 }
 
 @media (min-width: 960px) {
-  .item-card {
+  .cards-grid.view-mosaic .item-card {
     width: calc(33.333% - 0.7rem);
+  }
+
+  .cards-grid.view-column .item-card {
+    width: min(100%, 760px);
+    margin-inline: auto;
+  }
+
+  .cards-grid.view-column .item-image {
+    display: none;
   }
 
   .toolbar {
