@@ -48,7 +48,7 @@ const itemsRPG = [
   }
 ]
 
-function addItem(id, name, price, description, image, category, stock) {
+function addItem(id, name, price, description, image, category, stock, manualAdded = false) {
   itemsRPG.push({
     id,
     name,
@@ -56,7 +56,8 @@ function addItem(id, name, price, description, image, category, stock) {
     description,
     image,
     category,
-    stock
+    stock,
+    manualAdded
   })
 }
 
@@ -131,9 +132,29 @@ function updateGoldDisplay() {
   goldAmountSpan.textContent = playerGold // MODIFIER LE DOM : modification du texte d'un élément avec textContent
 }
 
+function removeItemById(itemId) {
+  const itemIndex = itemsRPG.findIndex((item) => item.id === itemId)
+  if (itemIndex === -1) return
+
+  const itemToRemove = itemsRPG[itemIndex]
+  if (!itemToRemove?.manualAdded) return
+
+  itemsRPG.splice(itemIndex, 1)
+  renderItems(categoryFilter.value || "all")
+}
+
+function removeItemImageById(itemId) {
+  const itemToUpdate = itemsRPG.find((item) => item.id === itemId)
+  if (!itemToUpdate?.manualAdded) return
+
+  itemToUpdate.image = ""
+  renderItems(categoryFilter.value || "all")
+}
+
 function createItemCard(item) {
   const card = document.createElement("article")
   card.className = "item-card"
+  let manageActions = null
 
   const img = document.createElement("img")
   img.className = "item-image"
@@ -192,6 +213,33 @@ function createItemCard(item) {
     handleBuy(item, stock, button)
   )
 
+  if (item.manualAdded) {
+    manageActions = document.createElement("div")
+    manageActions.className = "item-manage-actions"
+
+    const removeImageBtn = document.createElement("button")
+    removeImageBtn.className = "item-manage-btn"
+    removeImageBtn.type = "button"
+    removeImageBtn.textContent = "Effacer image"
+    removeImageBtn.disabled = !item.image
+    removeImageBtn.addEventListener("click", () => {
+      removeItemImageById(item.id)
+    })
+
+    const deleteItemBtn = document.createElement("button")
+    deleteItemBtn.className = "item-manage-btn item-manage-btn-danger"
+    deleteItemBtn.type = "button"
+    deleteItemBtn.textContent = "Supprimer l'article"
+    deleteItemBtn.addEventListener("click", () => {
+      const confirmDelete = confirm("Supprimer cet article du feed ?")
+      if (!confirmDelete) return
+      removeItemById(item.id)
+    })
+
+    manageActions.appendChild(removeImageBtn)
+    manageActions.appendChild(deleteItemBtn)
+  }
+
   card.appendChild(img)
   card.appendChild(title)
   card.appendChild(category)
@@ -199,6 +247,10 @@ function createItemCard(item) {
   card.appendChild(price)
   card.appendChild(stock)
   card.appendChild(button)
+
+  if (manageActions) {
+    card.appendChild(manageActions)
+  }
 
   return card
 }
@@ -319,7 +371,8 @@ if (addItemForm) {
       description || "Nouvel article ajouté.",
       image,
       category,
-      stock
+      stock,
+      true
     )
 
     renderItems(categoryFilter.value || "all")

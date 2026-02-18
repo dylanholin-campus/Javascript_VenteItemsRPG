@@ -361,6 +361,42 @@ body {
   opacity: 0.6;
 }
 
+.item-manage-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+}
+
+.item-manage-btn {
+  flex: 1;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid #39415a;
+  background: #1a1f2d;
+  color: #d8deef;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.item-manage-btn:hover:not(:disabled) {
+  border-color: #7ed6df;
+}
+
+.item-manage-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.item-manage-btn-danger {
+  border-color: #6a2a2a;
+  background: #2a1616;
+  color: #ffd3d3;
+}
+
+.item-manage-btn-danger:hover:not(:disabled) {
+  border-color: #c45858;
+}
+
 /* MESSAGE VIDE */
 
 .empty-message {
